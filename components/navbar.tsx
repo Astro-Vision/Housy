@@ -1,7 +1,7 @@
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Icon } from '@iconify/react';
-import Logo from "@/app/icon/Icon.svg";
+import Logo from "@/icon/Icon.svg";
+import { Input } from "./ui/input";
 
 export default function Navbar() {
     return (
