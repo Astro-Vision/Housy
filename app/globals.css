@@ -76,3 +76,22 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Hide the default calendar icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none; /* Hide the calendar icon in WebKit-based browsers (Chrome, Safari) */
+}
+
+/* Hide the calendar icon in Firefox */
+input[type="date"]::-moz-calendar-picker-indicator {
+  display: none; /* Hide the calendar icon in Firefox */
+}
+
+/* Ensure the input looks clean without the icon */
+input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: none;
+}
+
