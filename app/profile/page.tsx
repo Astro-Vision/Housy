@@ -2,7 +2,6 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 
-// Nested Component
 type ProfileInfoRowProps = {
     icon: string;
     label: string;
@@ -21,7 +20,6 @@ const ProfileInfoRow: React.FC<ProfileInfoRowProps> = ({ icon, label, value }) =
     );
 };
 
-// Parent Component
 const Profile: React.FC = () => {
     return (
         <div className="bg-gray-100 p-4">
@@ -29,7 +27,7 @@ const Profile: React.FC = () => {
                 <div className="max-w-2xl w-full bg-white shadow-lg rounded-lg overflow-hidden">
                     <h1 className="text-xl font-semibold  py-4 px-6">Personal Info</h1>
                     <div className="grid grid-cols-1 md:grid-cols-2">
-                        {/* Left Column */}
+
                         <div className="px-6 py-2">
                             <ProfileInfoRow icon="gg:profile" label="Full Name" value="John Doe" />
                             <ProfileInfoRow icon="mdi:email" label="Email" value="john.doe@example.com" />
@@ -44,7 +42,6 @@ const Profile: React.FC = () => {
                             />
                         </div>
 
-                        {/* Right Column */}
                         <div className="flex flex-col items-center justify-center p-6 border-gray-200">
                             <div className="w-fit h-fit mb-4">
                                 <img

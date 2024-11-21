@@ -2,21 +2,19 @@ import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import React from "react";
 
-// Define the types for the PropertyFeatures component
 type PropertyFeaturesProps = {
     label: string;
     value: string;
-    icon?: string; // Make icon optional
+    icon?: string;
 };
 
-// PropertyFeatures component to display feature information with an optional icon
 const PropertyFeatures: React.FC<PropertyFeaturesProps> = ({ label, value, icon }) => {
     return (
         <div className="property-feature">
             <p className="text-gray-600 text-sm">{label}</p>
             <div className="flex gap-2 items-center justify-start">
                 <h3>{value}</h3>
-                {icon && <Icon icon={icon} />} {/* Only display icon if provided */}
+                {icon && <Icon icon={icon} />}
             </div>
         </div>
     );
@@ -27,7 +25,7 @@ function DetailProperty() {
         <div className="bg-gray-100">
             <div className="max-w-screen-lg mx-auto p-8">
                 <div className="flex flex-col gap-6">
-                    {/* Gallery */}
+
                     <div className="flex flex-col gap-2">
                         <div className="aspect-video rounded-xl bg-gray-400 bg-opacity-50 h-full" />
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
@@ -37,7 +35,6 @@ function DetailProperty() {
                         </div>
                     </div>
 
-                    {/* Property Info */}
                     <div>
                         <h2 className="font-semibold text-4xl my-6">House Astina</h2>
                         <div className="flex justify-between">
@@ -51,11 +48,10 @@ function DetailProperty() {
                                 </p>
                             </div>
 
-                            {/* Property Features */}
                             <div className="flex gap-6 items-start">
                                 <PropertyFeatures label="Bedrooms" value="3" icon="fluent-emoji-high-contrast:bed" />
                                 <PropertyFeatures label="Bathrooms" value="3" icon="mdi:bathroom" />
-                                <PropertyFeatures label="Area" value="1800 ft" /> {/* No icon needed here */}
+                                <PropertyFeatures label="Area" value="1800 ft" />
                             </div>
                         </div>
                         <div>
