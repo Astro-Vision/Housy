@@ -1,12 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { Icon } from '@iconify/react';
-import Logo from "@/icon/Icon.svg";
-import { Input } from "./ui/input";
-import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
-import { SignUp } from "./dialog/sign-up";
-import { SignIn } from "./dialog/sign-in";
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { AvatarDropdown } from "./dropdown/avatar-dropdown";
+import { Input } from "./ui/input";
 
 export default function Navbar() {
     return (
