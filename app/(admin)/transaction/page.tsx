@@ -17,6 +17,7 @@ export interface ITransaction {
   buktiTransfer: string;
   status: 'Approved' | 'Cancel' | 'Pending';
 }
+
 const transactions: ITransaction[] = [
   {
     id: 1,
@@ -27,9 +28,9 @@ const transactions: ITransaction[] = [
   },
 ];
 
-const TransactionPage = () => {
+export default function TransactionPage() {
   return (
-    <div className="w-full max-w-6xl mx-auto p-4">
+    <div className="w-full max-w-6xl mx-auto p-4 pt-9">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Incoming Transaction</h1>
       </div>
@@ -70,6 +71,4 @@ const TransactionPage = () => {
       </div>
     </div>
   );
-};
-
-export default TransactionPage;
+}

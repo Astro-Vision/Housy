@@ -13,22 +13,21 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import React from 'react';
 
-const PropertyPage = () => {
+export default function PropertyPage() {
   return (
-    <div className="w-full max-w-4xl mx-auto p-4">
+    <div className="w-full max-w-4xl mx-auto p-4 pt-9">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Add Property</h1>
       </div>
       <div className="max-w-4xl mx-auto p-4">
         <form className="space-y-2 flex flex-col justify-center">
+          {/* Property Name */}
           <div className="space-y-2">
             <Label htmlFor="name">Name Property</Label>
-            <Input
-              id="name"
-              placeholder="Enter property name"
-            />
+            <Input id="name" placeholder="Enter property name" />
           </div>
 
+          {/* City Selection */}
           <div className="space-y-2">
             <Label htmlFor="city">City</Label>
             <Select>
@@ -43,23 +42,19 @@ const PropertyPage = () => {
             </Select>
           </div>
 
+          {/* Address */}
           <div className="space-y-2">
             <Label htmlFor="address">Address</Label>
-            <Textarea
-              id="address"
-              placeholder="Enter address"
-            />
+            <Textarea id="address" placeholder="Enter address" />
           </div>
 
+          {/* Price */}
           <div className="space-y-2">
             <Label htmlFor="price">Price</Label>
-            <Input
-              id="price"
-              type="number"
-              placeholder="Enter price"
-            />
+            <Input id="price" type="number" placeholder="Enter price" />
           </div>
 
+          {/* Rent Type */}
           <div className="space-y-2">
             <Label htmlFor="rentType">Type of Rent</Label>
             <Select>
@@ -68,13 +63,14 @@ const PropertyPage = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="Day">Day</SelectItem>
-                <SelectItem value="week">Week</SelectItem>
+                <SelectItem value="Week">Week</SelectItem>
                 <SelectItem value="Month">Month</SelectItem>
                 <SelectItem value="Year">Year</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
+          {/* Amenities */}
           <div className="space-y-2">
             <Label>Amenities</Label>
             <div className="flex space-x-4 ps-2">
@@ -87,12 +83,13 @@ const PropertyPage = () => {
                 <Label htmlFor="petAllowed">Pet Allowed</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <Checkbox id="sharedAccomodation" />
-                <Label htmlFor="sharedAccomodation">Shared Accomodation</Label>
+                <Checkbox id="sharedAccommodation" />
+                <Label htmlFor="sharedAccommodation">Shared Accommodation</Label>
               </div>
             </div>
           </div>
 
+          {/* Bedroom Selection */}
           <div className="space-y-2">
             <Label htmlFor="bedroom">Bedroom</Label>
             <Select>
@@ -108,6 +105,7 @@ const PropertyPage = () => {
             </Select>
           </div>
 
+          {/* Bathroom Selection */}
           <div className="space-y-2">
             <Label htmlFor="bathroom">Bathroom</Label>
             <Select>
@@ -123,16 +121,12 @@ const PropertyPage = () => {
             </Select>
           </div>
 
-          <Button
-            type="submit"
-            className="w-[300px] place-self-center mt-2"
-          >
+          {/* Save Button */}
+          <Button type="submit" className="w-[300px] place-self-center mt-2">
             Save
           </Button>
         </form>
       </div>
     </div>
   );
-};
-
-export default PropertyPage;
+}
