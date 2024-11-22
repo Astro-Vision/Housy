@@ -12,3 +12,102 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  username String @unique
+  password String
+
+  role    Role      @default(MEMBER)
+  profile Profile?
+  Booking Booking[]
+
+  @@map("user")
+}
+
+model Profile {
+  id       Int     @id @default(autoincrement())
+  fullname String
+  gender   Gender?
+  phone    String?
+  address  String?
+  image    String?
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  @@unique([userId])
+  @@map("profile")
+}
+
+model Property {
+  id      Int             @id @default(autoincrement())
+  name    String
+  city    String
+  address String
+  price   Int
+  image   ImageProperty[]
+
+  typeOfRent TypeOfRent
+  amenities  Amenities
+  bedroom    Int
+  bathroom   Int
+  Booking    Booking[]
+
+  @@map("property")
+}
+
+model Booking {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  checkIn   DateTime
+  CheckOut  DateTime
+  payment   Payment  @default(WAITING_PAYMENT)
+  image     String?
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  propertyId Int
+  property   Property @relation(fields: [propertyId], references: [id])
+
+  @@map("booking")
+}
+
+model ImageProperty {
+  id Int @id @default(autoincrement())
+
+  propertyId Int?
+  Property   Property? @relation(fields: [propertyId], references: [id])
+
+  @@map("image_property")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum TypeOfRent {
+  DAY
+  MONTH
+  YEAR
+}
+
+enum Amenities {
+  FURNISHED
+  PET_ALLOWED
+  SHARED_ACCOMODATION
+}
+
+enum Payment {
+  WAITING_PAYMENT
+  PROCESS_PAYMENT
+  APPROVE
+}
