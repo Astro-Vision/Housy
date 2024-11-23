@@ -76,10 +76,11 @@ model Booking {
 }
 
 model ImageProperty {
-  id Int @id @default(autoincrement())
+  id  Int    @id @default(autoincrement())
+  url String
 
-  propertyId Int?
-  Property   Property? @relation(fields: [propertyId], references: [id])
+  propertyId Int
+  Property   Property @relation(fields: [propertyId], references: [id])
 
   @@map("image_property")
 }
