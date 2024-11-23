@@ -1,9 +1,20 @@
+"use client";
 import { Icon } from '@iconify/react';
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import Link from 'next/link';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
-export function AvatarDropdown() {
+interface AvatarDropdownProps {
+    onLogout: () => void;
+}
+
+export function AvatarDropdown({onLogout}: AvatarDropdownProps) {
+    const handleLogout = () => {
+        onLogout();
+    };
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -35,7 +46,7 @@ export function AvatarDropdown() {
                 <hr style={{ margin: '10px 0' }} />
                 <div className='flex items-center gap-2'>
                     <Icon icon="line-md:logout" className=" text-black w-6 h-6" />
-                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                 </div>
             </DropdownMenuContent>
         </DropdownMenu>
