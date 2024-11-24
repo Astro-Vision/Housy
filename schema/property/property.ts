@@ -16,18 +16,4 @@ export const propertySchema = z.object({
     bathroom: z.number().int().min(1, "Bathroom must be at least 1"),
 });
 
-
 export type CreatePropertyInput = z.infer<typeof propertySchema>;
-
-export interface PropertyDTO {
-    id: number;
-    name: string;
-    city: string;
-    address: string;
-    price: number;
-    image: string;
-    typeOfRent: 'DAY' | 'MONTH' | 'YEAR';
-    amenities: 'FURNISHED' | 'PET_ALLOWED' | 'SHARED_ACCOMODATION';
-    bedroom: number;
-    bathroom: number;
-}

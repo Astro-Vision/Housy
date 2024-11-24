@@ -1,7 +1,7 @@
-import { CreatePropertyInput, propertySchema } from "@/schema/property/property";
-import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
+import { profileSchema } from "@/schema/profile/profile";
 
 const prisma = new PrismaClient();
 cloudinary.config({
@@ -10,24 +10,19 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function POST(request: Request) {
+export async function PUT(request: Request, { params }: { params: { userId: string } }) {
     try {
         const formData = await request.formData();
         const images = formData.getAll("image") as File[];
         const body = {
-            name: formData.get("name"),
-            city: formData.get("city"),
-            address: formData.get("address"),
-            price: Number(formData.get("price")),
-            typeOfRent: formData.get("typeOfRent"),
-            amenities: formData.get("amenities"),
-            bedroom: Number(formData.get("bedroom")),
-            bathroom: Number(formData.get("bathroom")),
+            fullname: formData.get("fullname"),
             image: images,
-        };
-        const data = propertySchema.parse(body);
+            phone: formData.get("phone"),
+            address: formData.get("address"),
+            gender: formData.get("gender")
+        }
+        const data = profileSchema.parse(body);
         const imageUrls: string[] = [];
-
         for (let i = 0; i < data.image.length; i++) {
             const file = data.image[i];
             if (file) {
@@ -41,25 +36,18 @@ export async function POST(request: Request) {
             }
         }
 
-        await prisma.property.create({
+        await prisma.profile.update({
+            where: { userId: parseInt(params.userId) },
             data: {
-                name: data.name,
-                city: data.city,
+                fullname: data.fullname,
+                image: imageUrls.length > 0 ? imageUrls[0] : null,
+                phone: data.phone,
                 address: data.address,
-                price: data.price,
-                typeOfRent: data.typeOfRent,
-                amenities: data.amenities,
-                bedroom: data.bedroom,
-                bathroom: data.bathroom,
-                image: {
-                    create: imageUrls.map((url) => ({
-                        url,
-                    })),
-                },
+                gender: data.gender
             },
         });
 
-        return NextResponse.json({ message: "Property created successfully!" });
+        return NextResponse.json({ message: "Profile updated successfully" });
     } catch (error) {
         console.error("Error creating property:", error);
         return NextResponse.json({

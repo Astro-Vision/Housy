@@ -9,6 +9,7 @@ import { Button } from './ui/button';
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { jwtDecode } from "jwt-decode";
+import Link from 'next/link';
 
 export default function Navbar() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -65,7 +66,9 @@ export default function Navbar() {
 
     return (
         <div className="flex items-center gap-4 h-14 px-4">
-            <img src="../image/Icon.png" alt="Logo" className="flex-2 w-32" />
+            <Link href={'/'}>
+                <img src="../image/Icon.png" alt="Logo" className="flex-2 w-32" />
+            </Link>
             <div className="relative flex items-center flex-1">
                 <Icon icon="line-md:search" className="absolute left-2 text-black w-6 h-6" />
                 <Input
