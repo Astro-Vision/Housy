@@ -1,15 +1,19 @@
+
 "use client";
 import { FileState, MultiImageDropzone } from "@/components/input-image/multiple-image";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
+
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
@@ -155,12 +159,14 @@ export default function PropertyPage() {
     }
   };
 
+
   return (
     <div className="w-full max-w-4xl mx-auto p-4 pt-9">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Add Property</h1>
       </div>
       <div className="max-w-4xl mx-auto p-4">
+
         <form onSubmit={handleSubmit} className="space-y-2 flex flex-col justify-center" >
           <div className="space-y-2">
             <Label htmlFor="name">Name Property</Label>
@@ -176,9 +182,11 @@ export default function PropertyPage() {
               onChange={(files) => {
                 setFileStates(files);
               }} />
+
           </div>
 
           <div className="space-y-2">
+
             <Label htmlFor="description">Description</Label>
             <Textarea id="description" name="description" placeholder="Enter description" />
           </div>
@@ -201,6 +209,7 @@ export default function PropertyPage() {
               }}>
               <SelectTrigger id="province">
                 <SelectValue placeholder="Select a Province" />
+
               </SelectTrigger>
               <SelectContent className="h-64">
                 {provinces.map((province: any) => (
@@ -284,20 +293,26 @@ export default function PropertyPage() {
 
           <div className="space-y-2">
             <Label htmlFor="address">Address</Label>
+
             <Textarea id="address" name="address" placeholder="Enter address" />
+
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="price">Price</Label>
+
             <Input id="price" type="number" name="price" placeholder="Enter price" />
+
           </div>
 
           <div className="space-y-2">
+
             <Label htmlFor="rentType">Type of Rent</Label>
             <Select
               value={rentType}
               onValueChange={(e) => setRentType(e)}>
               <SelectTrigger id="rentType">
+
                 <SelectValue placeholder="Select rent type" />
               </SelectTrigger>
               <SelectContent>
@@ -312,6 +327,7 @@ export default function PropertyPage() {
             <Label>Amenities</Label>
             <div className="flex space-x-4 ps-2">
               <div className="flex items-center space-x-2">
+
                 <Checkbox id="furnished" name="amenities" value="FURNISHED" />
                 <Label htmlFor="furnished">Furnished</Label>
               </div>
@@ -322,15 +338,18 @@ export default function PropertyPage() {
               <div className="flex items-center space-x-2">
                 <Checkbox id="sharedAccommodation" name="amenities" value="SHARED_ACCOMODATION" />
                 <Label htmlFor="sharedAccommodation">Shared Accommodation</Label>
+
               </div>
             </div>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="bedroom">Bedroom</Label>
+
             <Select
               value={bedroom.toString()}
               onValueChange={(e) => setBedroom(parseInt(e))}>
+
               <SelectTrigger id="bedroom">
                 <SelectValue placeholder="Select number of bedrooms" />
               </SelectTrigger>
@@ -346,9 +365,11 @@ export default function PropertyPage() {
 
           <div className="space-y-2">
             <Label htmlFor="bathroom">Bathroom</Label>
+
             <Select
               value={bathroom.toString()}
               onValueChange={(e) => setBathroom(parseInt(e))}>
+
               <SelectTrigger id="bathroom">
                 <SelectValue placeholder="Select number of bathrooms" />
               </SelectTrigger>
@@ -362,8 +383,10 @@ export default function PropertyPage() {
             </Select>
           </div>
 
+
           <Button type="submit" className="w-full place-self-center mt-2">
             Add Property
+
           </Button>
         </form>
       </div>
