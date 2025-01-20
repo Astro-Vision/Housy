@@ -35,25 +35,33 @@ model Profile {
   image    String?
 
   userId Int
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
   @@map("profile")
 }
 
 model Property {
-  id      Int             @id @default(autoincrement())
-  name    String
-  city    String
-  address String
-  price   Int
-  image   ImageProperty[]
+  id          Int             @id @default(autoincrement())
+  image       ImageProperty[]
+  name        String
+  description String
 
+  province String
+  regency  String
+  district String
+  village  String
+  address  String
+
+  price      Int
   typeOfRent TypeOfRent
-  amenities  Amenities
-  bedroom    Int
-  bathroom   Int
-  Booking    Booking[]
+  amenities  Amenities[]
+
+  bedroom  Int
+  bathroom Int
+  area     Int
+
+  Booking Booking[]
 
   @@map("property")
 }
@@ -65,12 +73,15 @@ model Booking {
   CheckOut  DateTime
   payment   Payment  @default(WAITING_PAYMENT)
   image     String?
+  price     Int
+
+  orderId String?
 
   userId Int
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   propertyId Int
-  property   Property @relation(fields: [propertyId], references: [id])
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
   @@map("booking")
 }
@@ -80,7 +91,7 @@ model ImageProperty {
   url String
 
   propertyId Int
-  Property   Property @relation(fields: [propertyId], references: [id])
+  Property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
   @@map("image_property")
 }

@@ -1,9 +1,8 @@
 "use client";
 import { Icon } from '@iconify/react';
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import Link from 'next/link';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 
 interface AvatarDropdownProps {
@@ -11,8 +10,10 @@ interface AvatarDropdownProps {
 }
 
 export function AvatarDropdown({onLogout}: AvatarDropdownProps) {
+    const router = useRouter();
     const handleLogout = () => {
         onLogout();
+        router.push('/');
     };
 
     return (
@@ -40,7 +41,7 @@ export function AvatarDropdown({onLogout}: AvatarDropdownProps) {
                 <div className='flex items-center gap-2'>
                     <Icon icon="line-md:clipboard-list" className=" text-black w-6 h-6" />
                     <DropdownMenuItem>
-                        <Link href='/invoices'>History</Link>
+                        <Link href='/history'>History</Link>
                     </DropdownMenuItem>
                 </div>
                 <hr style={{ margin: '10px 0' }} />

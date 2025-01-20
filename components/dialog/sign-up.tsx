@@ -10,8 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Cookies from "js-cookie";
 
-export function SignUp() {
+interface SignUpProps {
+    onLogin: (token: string) => void;
+}
+
+export function SignUp({ onLogin }: SignUpProps) {
     const [formData, setFormData] = useState({
         fullname: "",
         email: "",
@@ -31,22 +36,21 @@ export function SignUp() {
         setIsLoading(true);
 
         try {
-            const res = await fetch("/api/auth/register", {
+            const response = await fetch("/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
             });
 
-            if (!res.ok) {
-                const { error } = await res.json();
+            if (!response.ok) {
+                const { error } = await response.json();
                 throw new Error(error);
             }
 
-            const data = await res.json();
-            console.log("User registered:", data);
+            const data = await response.json();
+            Cookies.set("token", data.token, { expires: 1 });
+            onLogin(data.token);
             alert("Registration successful!");
-
-            setFormData({ fullname: "", email: "", password: "" });
         } catch (err: any) {
             console.error(err);
             setError(err.message || "An error occurred");
@@ -106,7 +110,7 @@ export function SignUp() {
                 </div>
                 <DialogFooter>
                     <Button type="submit" disabled={isLoading}>
-                        {isLoading ? "Signing In..." : "Sign In"}
+                        {isLoading ? "Signing Up..." : "Sign Up"}
                     </Button>
                 </DialogFooter>
             </form>

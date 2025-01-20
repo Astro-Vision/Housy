@@ -67,6 +67,7 @@ export function SignIn({ onLogin }: SignInProps) {
                         </Label>
                         <Input
                             id="email"
+                            type="text"
                             placeholder="Enter your email"
                             className="col-span-3"
                             value={usernameOrEmail}
