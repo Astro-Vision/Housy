@@ -28,7 +28,6 @@ const transactions: ITransaction[] = [
   },
 ];
 
-export default function TransactionPage() {
   return (
     <div className="w-full max-w-6xl mx-auto p-4 pt-9">
       <div className="flex justify-between items-center mb-6">
