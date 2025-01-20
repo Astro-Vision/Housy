@@ -5,9 +5,9 @@ import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
     try {
-        const body = await request.json();
+        const body = await req.json();
 
         const existUser = await prisma.user.findUnique({
             where: { email: body.email },

@@ -1,6 +1,7 @@
 "use client";
 import Order from "@/components/dialog/order";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Icon } from "@iconify/react";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { useParams } from "next/navigation";
@@ -29,6 +30,13 @@ export default function DetailProperty() {
     const [property, setProperty] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [propertyId, setPropertyId] = useState<number>(0);
+    function toTitleCase(str: string) {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    }
 
     useEffect(() => {
         const fetchProperty = async () => {
@@ -48,10 +56,10 @@ export default function DetailProperty() {
                 setLoading(false);
             }
         }
-        
+
         fetchProperty();
     }, [params.id]);
-    
+
     if (loading) {
         return <p>Loading...</p>;
     }
@@ -72,7 +80,20 @@ export default function DetailProperty() {
                         </div>
                     </div>
                     <div>
-                        <h2 className="font-semibold text-4xl my-6">{property.name}</h2>
+                        <div className="flex w-full justify-between">
+                            <h2 className="font-semibold text-4xl my-6">{property.name}</h2>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                    <Icon icon="line-md:close-to-menu-alt-transition" width="28" height="28" />
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    <DropdownMenuLabel>Detail Property</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                         <div className="flex justify-between">
                             <div>
                                 <h3 className="font-semibold text-xl">
@@ -82,14 +103,21 @@ export default function DetailProperty() {
                                     </span>
                                 </h3>
                                 <p className="text-gray-600 text-sm w-[80%]">
-                                    {property.address}
+                                    {[
+                                        property.address,
+                                        property.province,
+                                        property.regency,
+                                        property.district,
+                                        property.village
+                                    ]
+                                        .map(item => toTitleCase(item))
+                                        .join(', ')}
                                 </p>
                             </div>
                             <div className="flex gap-6 items-start">
                                 <PropertyFeatures label="Bedrooms" value={property.bedroom} icon="fluent-emoji-high-contrast:bed" />
                                 <PropertyFeatures label="Bathrooms" value={property.bathroom} icon="mdi:bathroom" />
-                                <PropertyFeatures label="Area" value="1800 ft" />
-                                {/* {property.area} */}
+                                <PropertyFeatures label="Area" value={property.area} />
                             </div>
                         </div>
                         <div>
@@ -100,8 +128,7 @@ export default function DetailProperty() {
                                     {property.amenities === "PET_ALLOWED" ? "Pet Allowed" : ""}
                                     {property.amenities === "SHARED_ACCOMODATION" ? "Shared Accommodation" : ""}
                                 </p>
-                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.  It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                                {/* {property.description} */}
+                                {property.description}
                             </p>
                         </div>
                         <div className="flex justify-end mt-6">

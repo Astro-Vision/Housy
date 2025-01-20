@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "../components/navbar";
+import Script from "next/script";
+import { SearchProvider } from "@/components/search";
+import { EdgeStoreProvider } from "@/lib/edgestore";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -26,11 +29,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/Icon.png" />
+      </head>
+      <Script
+        src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key={process.env.NEXT_PUBLIC_CLIENT_KEY as string}></Script>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        {children}
+        <SearchProvider>
+          <Navbar />
+          <EdgeStoreProvider>{children}</EdgeStoreProvider>
+        </SearchProvider>
       </body>
     </html>
   );

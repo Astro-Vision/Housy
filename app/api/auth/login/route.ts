@@ -5,9 +5,9 @@ import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
     try {
-        const body = await request.json();
+        const body = await req.json();
         const user = await prisma.user.findFirst({
             where: {
                 OR: [
@@ -25,12 +25,12 @@ export async function POST(request: Request) {
         }
         const { password, ...userToSign } = user;
         const token = jwt.sign(
-            { id: user.id },
+            { id: user.id, role: user.role },
             process.env.JWT_SECRET!,
             { expiresIn: '1d' }
         );
         return NextResponse.json({ ...userToSign, token });
     } catch (error) {
-        return NextResponse.json({ error: "Email must be unique" }, { status: 400 });
+        return NextResponse.json({ error: "User not found" }, { status: 400 });
     }
 }

@@ -10,26 +10,13 @@ import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { jwtDecode } from "jwt-decode";
 import Link from 'next/link';
+import { useSearchContext } from './search';
+import Image from 'next/image';
 
 export default function Navbar() {
+    const { searchQuery, setSearchQuery } = useSearchContext();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [userId, setUserId] = useState<number | null>(null);
-
-    useEffect(() => {
-        const token = Cookies.get('token');
-        if (token) {
-            setIsAuthenticated(true);
-
-            try {
-                const decoded: any = jwtDecode(token);
-                setUserId(decoded.id);
-            } catch (error) {
-                console.error('Token decoding error:', error);
-            }
-        } else {
-            setIsAuthenticated(false);
-        }
-    }, []);
+    const [_, setUserId] = useState<number | null>(null);
 
     const handleLogin = (token: string) => {
         Cookies.set('token', token);
@@ -67,7 +54,7 @@ export default function Navbar() {
     return (
         <div className="flex items-center gap-4 h-14 px-4">
             <Link href={'/'}>
-                <img src="../image/Icon.png" alt="Logo" className="flex-2 w-32" />
+                <Image src="/Icon.png" alt="Logo" width={100} height={100} />
             </Link>
             <div className="relative flex items-center flex-1">
                 <Icon icon="line-md:search" className="absolute left-2 text-black w-6 h-6" />
@@ -75,6 +62,8 @@ export default function Navbar() {
                     type="search"
                     placeholder="City"
                     className="pl-10"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                     style={{ border: 'none', backgroundColor: '#f0f0f0' }}
                 />
             </div>
@@ -95,7 +84,7 @@ export default function Navbar() {
                             <DialogTrigger asChild>
                                 <Button>Sign Up</Button>
                             </DialogTrigger>
-                            <SignUp />
+                            <SignUp onLogin={handleLogin} />
                         </Dialog>
                     </>
                 )}

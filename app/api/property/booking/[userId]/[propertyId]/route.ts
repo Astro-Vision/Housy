@@ -25,12 +25,44 @@ export async function POST(req: Request, { params }: { params: { userId: string;
             }, { status: 400 });
         }
 
+        const property = await prisma.property.findUnique({
+            where: {
+                id: parseInt(params.propertyId),
+            }
+        });
+
+        if (!property) {
+            return NextResponse.json({
+                message: "Property not found",
+            }, { status: 404 });
+        }
+
+        let price;
+        const timeDifference = checkOutDate.getTime() - checkInDate.getTime();
+        const days = timeDifference / (1000 * 60 * 60 * 24);
+
+        if (property.typeOfRent === "DAY") {
+            price = property.price * days;
+        } else if (property.typeOfRent === "MONTH") {
+            const months = Math.ceil(days / 30);
+            price = property.price * months;
+        } else if (property.typeOfRent === "YEAR") {
+            const years = Math.ceil(days / 365);
+            price = property.price * years;
+        }
+        if (!price) {
+            return NextResponse.json({
+                message: "Error calculating price",
+            })
+        }
+
         const booking = await prisma.booking.create({
             data: {
                 checkIn: checkInDate,
                 CheckOut: checkOutDate,
                 userId: parseInt(params.userId),
                 propertyId: parseInt(params.propertyId),
+                price
             },
         });
 

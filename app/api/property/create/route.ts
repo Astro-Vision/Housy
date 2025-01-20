@@ -1,7 +1,7 @@
-import { CreatePropertyInput, propertySchema } from "@/schema/property/property";
-import { NextResponse } from "next/server";
+import { propertySchema } from "@/schema/property/property";
 import { PrismaClient } from "@prisma/client";
 import { v2 as cloudinary } from "cloudinary";
+import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 cloudinary.config({
@@ -10,24 +10,30 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
     try {
-        const formData = await request.formData();
+        const formData = await req.formData();
         const images = formData.getAll("image") as File[];
+
         const body = {
             name: formData.get("name"),
-            city: formData.get("city"),
+            description: formData.get("description"),
+            province: formData.get("province"),
+            regency: formData.get("regency"),
+            district: formData.get("district"),
+            village: formData.get("village"),
             address: formData.get("address"),
             price: Number(formData.get("price")),
             typeOfRent: formData.get("typeOfRent"),
             amenities: formData.get("amenities"),
             bedroom: Number(formData.get("bedroom")),
             bathroom: Number(formData.get("bathroom")),
+            area: Number(formData.get("area")),
             image: images,
         };
+
         const data = propertySchema.parse(body);
         const imageUrls: string[] = [];
-
         for (let i = 0; i < data.image.length; i++) {
             const file = data.image[i];
             if (file) {
@@ -41,16 +47,22 @@ export async function POST(request: Request) {
             }
         }
 
+
         await prisma.property.create({
             data: {
                 name: data.name,
-                city: data.city,
+                description: data.description,
+                province: data.province,
+                regency: data.regency,
+                district: data.district,
+                village: data.village,
                 address: data.address,
                 price: data.price,
                 typeOfRent: data.typeOfRent,
                 amenities: data.amenities,
                 bedroom: data.bedroom,
                 bathroom: data.bathroom,
+                area: data.area,
                 image: {
                     create: imageUrls.map((url) => ({
                         url,

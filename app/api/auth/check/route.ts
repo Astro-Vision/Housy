@@ -1,9 +1,18 @@
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
-    const user = (request as any).user;
-    if (!user) {
-        throw new Error('User not found!');
+export async function GET(req: Request) {
+    const userHeader = req.headers.get("user");
+    if (!userHeader) {
+        return NextResponse.json(
+            { message: "User not authenticated" },
+            { status: 401 }
+        );
     }
-    return NextResponse.json(user);
+
+    const user = JSON.parse(userHeader);
+
+    return NextResponse.json({
+        message: "Authenticated",
+        user,
+    });
 }

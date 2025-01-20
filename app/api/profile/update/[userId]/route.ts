@@ -10,9 +10,9 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function PUT(request: Request, { params }: { params: { userId: string } }) {
+export async function PUT(req: Request, { params }: { params: { userId: string } }) {
     try {
-        const formData = await request.formData();
+        const formData = await req.formData();
         const images = formData.getAll("image") as File[];
         const body = {
             fullname: formData.get("fullname"),
@@ -36,7 +36,7 @@ export async function PUT(request: Request, { params }: { params: { userId: stri
             }
         }
 
-        await prisma.profile.update({
+        const profile = await prisma.profile.update({
             where: { userId: parseInt(params.userId) },
             data: {
                 fullname: data.fullname,
@@ -47,11 +47,11 @@ export async function PUT(request: Request, { params }: { params: { userId: stri
             },
         });
 
-        return NextResponse.json({ message: "Profile updated successfully" });
+        return NextResponse.json(profile);
     } catch (error) {
-        console.error("Error creating property:", error);
+        console.error("Error update profile:", error);
         return NextResponse.json({
-            message: "Error creating property",
+            message: "Error update profile",
             error: (error as Error).message,
         });
     }

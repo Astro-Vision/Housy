@@ -2,15 +2,14 @@
 import { Button } from "@/components/ui/button";
 import {
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
-    DialogTitle,
+    DialogTitle
 } from "@/components/ui/dialog";
 import { Icon } from '@iconify/react';
+import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useRef, useState } from 'react';
-import Cookies from "js-cookie";
 
 interface OrderProps {
     propertyId: number
@@ -26,6 +25,8 @@ export default function Order({ propertyId }: OrderProps) {
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userId, setUserId] = useState<number | null>(null);
+    console.log("sasdas",userId);
+    
     useEffect(() => {
         const token = Cookies.get('token');
         if (token) {
@@ -42,8 +43,8 @@ export default function Order({ propertyId }: OrderProps) {
         }
     }, [Cookies.get('token')]);
 
-    const [checkIn, setCheckIn] = useState("");
-    const [checkOut, setCheckOut] = useState("");
+    const [checkIn, setCheckIn] = useState(new Date());
+    const [checkOut, setCheckOut] = useState(new Date());
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const handleSubmit = async (e: React.FormEvent) => {
@@ -64,6 +65,8 @@ export default function Order({ propertyId }: OrderProps) {
                 throw new Error(error || "Failed to log in");
             }
         } catch (err: any) {
+            console.log("Something went wrong");
+            
             setError(err.message || "Something went wrong");
         } finally {
             setIsLoading(false);
@@ -87,8 +90,8 @@ export default function Order({ propertyId }: OrderProps) {
                         <input
                             ref={dateInputRef}
                             type="date"
-                            value={checkIn}
-                            onChange={(e) => setCheckIn(e.target.value)}
+                            value={checkIn.toISOString().slice(0, 10)}
+                            onChange={(e) => setCheckIn(new Date(e.target.value))}
                             className="pl-10 pr-10 w-full" />
                         <Icon
                             icon="bxs:down-arrow"
@@ -106,8 +109,8 @@ export default function Order({ propertyId }: OrderProps) {
                         <input
                             ref={dateInputRef}
                             type="date"
-                            value={checkOut}
-                            onChange={(e) => setCheckOut(e.target.value)}
+                            value={checkOut.toISOString().slice(0, 10)}
+                            onChange={(e) => setCheckOut(new Date(e.target.value))}
                             className="pl-10 pr-10 w-full" />
                         <Icon
                             icon="bxs:down-arrow"

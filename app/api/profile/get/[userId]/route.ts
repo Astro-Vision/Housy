@@ -12,7 +12,8 @@ export async function GET(req: Request, { params }: { params: { userId: string }
         include: {
             user: {
                 select: {
-                    profile: true
+                    profile: true,
+                    email: true
                 }
             }
         }
