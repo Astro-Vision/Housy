@@ -1,5 +1,8 @@
 "use client";
-import { useParams } from "next/navigation";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { Button } from "../../../../components/ui/button";
 import { Checkbox } from "../../../../components/ui/checkbox";
 import { Input } from "../../../../components/ui/input";
@@ -12,7 +15,8 @@ import {
   SelectValue,
 } from "../../../../components/ui/select";
 import { Textarea } from "../../../../components/ui/textarea";
-import { useEffect, useState } from "react";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import Link from "next/link";
 
 interface Region {
   id: string;
@@ -20,12 +24,11 @@ interface Region {
 }
 
 export default function PropertyEditPage() {
+  const router = useRouter();
   const params = useParams();
+  const [isLoading, setIsLoading] = useState(false);
   const [property, setProperty] = useState<any>(null);
-  console.log("property", property);
-
   const [propertyId, setPropertyId] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
 
   const [rentType, setRentType] = useState("");
   const [bedroom, setBedroom] = useState(1);
@@ -45,6 +48,7 @@ export default function PropertyEditPage() {
   const [selectedDistrictName, setSelectedDistrictName] = useState("");
 
   const [villages, setVillages] = useState<Region[]>([]);
+  const [selectedVillage, setSelectedVillage] = useState("");
   const [selectedVillageName, setSelectedVillageName] = useState("");
 
   useEffect(() => {
@@ -131,12 +135,15 @@ export default function PropertyEditPage() {
         setPropertyId(data.id);
         setBathroom(data?.bathroom || 1);
         setBedroom(data?.bedroom || 1);
-        setRentType(data.typeOfRent || "DAY")
+        setRentType(data.typeOfRent || "DAY");
         setSelectedAmenities(data?.amenities || []);
+
+        setSelectedProvinceName(data.province || "");
+        setSelectedRegencyName(data.regency || "");
+        setSelectedDistrictName(data.district || "");
+        setSelectedVillageName(data.village || "");
       } catch (error) {
         console.error("Error fetching property data:", error);
-      } finally {
-        setLoading(false);
       }
     }
 
@@ -157,47 +164,109 @@ export default function PropertyEditPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData();
     const form = e.currentTarget;
 
-    formData.append("name", form.nameProperty.value);
-    formData.append("description", form.description.value);
-    formData.append("area", form.area.value);
-    formData.append("province", selectedProvinceName);
-    formData.append("regency", selectedRegencyName);
-    formData.append("district", selectedDistrictName);
-    formData.append("village", selectedVillageName);
-    formData.append("address", form.address.value);
-    formData.append("price", form.price.value);
-    formData.append("typeOfRent", rentType);
-    formData.append("bedroom", bedroom.toString());
-    formData.append("bathroom", bathroom.toString());
-
-    form.querySelectorAll<HTMLInputElement>('input[name="amenities"]:checked').forEach((checkbox) => {
-      formData.append("amenities", checkbox.value);
-    });
-
+    const data = {
+      name: form.nameProperty.value,
+      description: form.description.value,
+      area: Number(form.area.value),
+      province: selectedProvinceName,
+      regency: selectedRegencyName,
+      district: selectedDistrictName,
+      village: selectedVillageName,
+      address: form.address.value,
+      price: Number(form.price.value),
+      typeOfRent: rentType,
+      bedroom: bedroom,
+      bathroom: bathroom,
+      amenities: Array.from(
+        form.querySelectorAll<HTMLInputElement>('input[name="amenities"]:checked')
+      ).map((checkbox) => checkbox.value),
+    };
+    setIsLoading(true);
     try {
-      const response = await fetch("/api/property/create", {
-        method: "POST",
-        body: formData,
+      const response = await fetch(`/api/property/update/${params.propertyId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
+
       const result = await response.json();
 
       if (response.ok) {
-        alert("Property created successfully!");
+        toast.success("Property edit successfully!");
+        router.push("/");
       } else {
+        toast.error(`Error: ${result.message}`);
         alert(`Error: ${result.message}`);
       }
     } catch (error) {
+      toast.error("An error occurred while submitting the form.");
       console.error("Failed to submit form:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+
+  useEffect(() => {
+    if (selectedProvinceName && provinces.length > 0) {
+      const matchedProvince = provinces.find((province) => province.name === selectedProvinceName);
+      if (matchedProvince) {
+        setSelectedProvince(matchedProvince.id);
+      }
+    }
+  }, [selectedProvinceName, provinces]);
+
+  useEffect(() => {
+    if (selectedRegencyName && regencies.length > 0) {
+      const matchedRegency = regencies.find((regency) => regency.name === selectedRegencyName);
+      if (matchedRegency) {
+        setSelectedRegency(matchedRegency.id);
+      }
+    }
+  }, [selectedRegencyName, regencies]);
+
+  useEffect(() => {
+    if (selectedDistrictName && districts.length > 0) {
+      const matchedDistrict = districts.find((district) => district.name === selectedDistrictName);
+      if (matchedDistrict) {
+        setSelectedDistrict(matchedDistrict.id);
+      }
+    }
+  }, [selectedDistrictName, districts]);
+
+  useEffect(() => {
+    if (selectedVillageName && villages.length > 0) {
+      const matchedVillage = villages.find((village) => village.name === selectedVillageName);
+      if (matchedVillage) {
+        setSelectedVillage(matchedVillage.id);
+      }
+    }
+  }, [selectedVillageName, villages]);
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 pt-9">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Add Property</h1>
+        <h1 className="text-2xl font-bold">Edit Property</h1>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Icon icon="line-md:close-to-menu-alt-transition" width="28" height="28" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>
+              <Link className="w-full text-center" href="/in-transaction">In Transaction</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link className="w-full text-center" href="/out-transaction">Out Transaction</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link className="w-full text-center" href="/property">Add Property</Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="max-w-4xl mx-auto p-4">
         <form onSubmit={handleSubmit} className="space-y-2 flex flex-col justify-center" >
@@ -223,6 +292,8 @@ export default function PropertyEditPage() {
               onValueChange={(value) => {
                 setSelectedProvince(value);
                 const selected = provinces.find(province => province.id === value);
+                console.log("selected", selected);
+
                 if (selected) {
                   setSelectedProvinceName(selected.name);
                 }
@@ -291,6 +362,7 @@ export default function PropertyEditPage() {
           <div className="space-y-2">
             <Label htmlFor="village">Village</Label>
             <Select
+              value={selectedVillage}
               onValueChange={(value) => {
                 const selected = villages.find(village => village.id === value);
                 if (selected) {
@@ -409,7 +481,7 @@ export default function PropertyEditPage() {
           </div>
 
           <Button type="submit" className="w-full place-self-center mt-2">
-            Edit Property
+            {isLoading ? "Editing Property..." : "Edit Property"}
           </Button>
         </form>
       </div>

@@ -9,13 +9,13 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { DialogTitle, DialogDescription } from '@radix-ui/react-dialog';
+import { DialogDescription } from '@radix-ui/react-dialog';
+import { differenceInDays, format } from 'date-fns';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import { DialogHeader, DialogFooter, DialogContent } from '../ui/dialog';
 import { Button } from '../ui/button';
-import Image from 'next/image';
-import { differenceInDays, format } from 'date-fns';
+import { DialogFooter, DialogHeader } from '../ui/dialog';
 
 interface InvoiceProps {
     id: number;

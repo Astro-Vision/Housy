@@ -25,7 +25,9 @@ export async function POST(req: Request) {
             address: formData.get("address"),
             price: Number(formData.get("price")),
             typeOfRent: formData.get("typeOfRent"),
-            amenities: formData.get("amenities"),
+            amenities: formData.get("amenities")
+                ? JSON.parse(formData.get("amenities") as string)
+                : [],
             bedroom: Number(formData.get("bedroom")),
             bathroom: Number(formData.get("bathroom")),
             area: Number(formData.get("area")),
@@ -46,7 +48,6 @@ export async function POST(req: Request) {
                 imageUrls.push(uploadResponse.secure_url);
             }
         }
-
 
         await prisma.property.create({
             data: {

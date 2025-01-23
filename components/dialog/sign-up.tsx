@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 interface SignUpProps {
     onLogin: (token: string) => void;
@@ -49,11 +50,11 @@ export function SignUp({ onLogin }: SignUpProps) {
 
             const data = await response.json();
             Cookies.set("token", data.token, { expires: 1 });
+            toast.success("Registration successful! 🎉");
             onLogin(data.token);
-            alert("Registration successful!");
         } catch (err: any) {
-            console.error(err);
             setError(err.message || "An error occurred");
+            toast.error(err.message || "An error occurred");
         } finally {
             setIsLoading(false);
         }

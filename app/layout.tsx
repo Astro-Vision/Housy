@@ -5,6 +5,8 @@ import Navbar from "../components/navbar";
 import Script from "next/script";
 import { SearchProvider } from "@/components/search";
 import { EdgeStoreProvider } from "@/lib/edgestore";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -41,6 +43,12 @@ export default function RootLayout({
         <SearchProvider>
           <Navbar />
           <EdgeStoreProvider>{children}</EdgeStoreProvider>
+          <ToastContainer
+            position="bottom-right"
+            autoClose={4000}
+            hideProgressBar={false}
+            closeOnClick draggable
+            pauseOnHover />
         </SearchProvider>
       </body>
     </html>

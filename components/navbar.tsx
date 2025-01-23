@@ -30,10 +30,25 @@ export default function Navbar() {
         }
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         Cookies.remove('token');
         setIsAuthenticated(false);
         setUserId(null);
+        try {
+            const response = await fetch('/api/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                await response.json();
+            } else {
+                console.error('Logout failed');
+            }
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
     };
 
     useEffect(() => {
@@ -48,8 +63,9 @@ export default function Navbar() {
             }
         } else {
             setIsAuthenticated(false);
+            setUserId(null);
         }
-    }, [Cookies.get('token')]);
+    }, []);
 
     return (
         <div className="flex items-center gap-4 h-14 px-4">

@@ -19,7 +19,7 @@ export default function PropertyCard({ filters }: { filters: Filters }) {
     const { searchQuery } = useSearchContext();
     const [property, setProperty] = useState<any[]>([]);
     const [filteredProperty, setFilteredProperty] = useState<any[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchProperty = async () => {
@@ -33,7 +33,7 @@ export default function PropertyCard({ filters }: { filters: Filters }) {
             } catch (error) {
                 console.error("Error fetching property data:", error);
             } finally {
-                setLoading(false);
+                setIsLoading(false);
             }
         };
 
@@ -60,10 +60,20 @@ export default function PropertyCard({ filters }: { filters: Filters }) {
         filterData();
     }, [filters, property, searchQuery]);
 
+    if (filteredProperty.length === 0) {
+        return (
+            <div className="w-full flex justify-center items-center h-[300px]">
+                <p className="text-gray-500">No properties found</p>
+            </div>
+        )
+    }
+
     return (
         <div className="pt-3 pl-1 pb-4 flex flex-wrap gap-[20px] justify-start">
-            {loading ? (
-                <p>Loading...</p>
+            {isLoading ? (
+                <div className="w-full flex justify-center items-center h-[300px]">
+                    <p className="text-gray-500">Loading properties...</p>
+                </div>
             ) : (
                 filteredProperty.map((data) => (
                     <Link href={'detailProperty/' + data.id} key={data.city} className="cursor-pointer">

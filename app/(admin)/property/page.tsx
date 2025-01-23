@@ -2,6 +2,7 @@
 import { FileState, MultiImageDropzone } from "@/components/input-image/multiple-image";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -12,14 +13,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface Region {
   id: string;
   name: string;
 }
 
-export default function PropertyPage() { 
+export default function PropertyPage() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [fileStates, setFileStates] = useState<FileState[]>([]);
   const [rentType, setRentType] = useState("");
   const [bedroom, setBedroom] = useState(1);
@@ -128,15 +135,17 @@ export default function PropertyPage() {
     formData.append("bedroom", bedroom.toString());
     formData.append("bathroom", bathroom.toString());
 
-    form.querySelectorAll<HTMLInputElement>('input[name="amenities"]:checked').forEach((checkbox) => {
-      formData.append("amenities", checkbox.value);
-    });
+    const amenities = Array.from(
+      form.querySelectorAll<HTMLInputElement>('input[name="amenities"]:checked')
+    ).map((checkbox) => checkbox.value);
+    formData.append("amenities", JSON.stringify(amenities));
 
     fileStates.forEach((fileState) => {
       if (fileState.file) {
         formData.append("image", fileState.file);
       }
     });
+    setIsLoading(true);
 
     try {
       const response = await fetch("/api/property/create", {
@@ -144,23 +153,42 @@ export default function PropertyPage() {
         body: formData,
       });
       const result = await response.json();
-
       if (response.ok) {
-        alert("Property created successfully!");
+        toast.success("Property created successfully!");
+        router.push("/");
       } else {
+        toast.error(`Error: ${result.message}`);
         alert(`Error: ${result.message}`);
       }
     } catch (error) {
+      toast.error("Failed to create property.");
       console.error("Failed to submit form:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 pt-9">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Add Property</h1>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Icon icon="line-md:close-to-menu-alt-transition" width="28" height="28" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>
+              <Link className="w-full text-center" href="/in-transaction">In Transaction</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link className="w-full text-center" href="/out-transaction">Out Transaction</Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="max-w-4xl mx-auto p-4">
+
         <form onSubmit={handleSubmit} className="space-y-2 flex flex-col justify-center" >
           <div className="space-y-2">
             <Label htmlFor="name">Name Property</Label>
@@ -171,11 +199,12 @@ export default function PropertyPage() {
             <MultiImageDropzone
               value={fileStates}
               dropzoneOptions={{
-                maxFiles: 6,
+                maxFiles: 3,
               }}
               onChange={(files) => {
                 setFileStates(files);
               }} />
+
           </div>
 
           <div className="space-y-2">
@@ -201,6 +230,7 @@ export default function PropertyPage() {
               }}>
               <SelectTrigger id="province">
                 <SelectValue placeholder="Select a Province" />
+
               </SelectTrigger>
               <SelectContent className="h-64">
                 {provinces.map((province: any) => (
@@ -298,6 +328,7 @@ export default function PropertyPage() {
               value={rentType}
               onValueChange={(e) => setRentType(e)}>
               <SelectTrigger id="rentType">
+
                 <SelectValue placeholder="Select rent type" />
               </SelectTrigger>
               <SelectContent>
@@ -363,7 +394,7 @@ export default function PropertyPage() {
           </div>
 
           <Button type="submit" className="w-full place-self-center mt-2">
-            Add Property
+            {isLoading ? "Creating Property..." : "Add Property"}
           </Button>
         </form>
       </div>

@@ -21,7 +21,7 @@ import { format } from 'date-fns';
 export default function TransCard() {
     const pathName = usePathname();
     const [booking, setBooking] = useState<any>(null);
-    const [_, setLoading] = useState<boolean>(true);
+    const [isLoading, seIsLoading] = useState<boolean>(true);
     const [file, setFile] = useState<File>();
     const [userId, setUserId] = useState<number | null>(null);
     const formatDate = (date: string | null | undefined) => {
@@ -55,7 +55,7 @@ export default function TransCard() {
                     }
                     const data = await response.json();
                     setBooking(data);
-                    setLoading(false);
+                    seIsLoading(false);
                 } catch (error) {
                     console.error("Error fetching profile data:", error);
                 }
@@ -73,6 +73,12 @@ export default function TransCard() {
                 : pathName === '/transaction'
                     ? booking?.filter((invoice: any) => invoice.payment === 'PROCESS_PAYMENT')
                     : [];
+
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-screen">
+            <p className="text-gray-600">Loading...</p>
+        </div>;
+    }
 
     return (
         <>
