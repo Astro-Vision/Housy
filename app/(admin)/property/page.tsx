@@ -1,3 +1,4 @@
+
 "use client";
 import { FileState, MultiImageDropzone } from "@/components/input-image/multiple-image";
 import { Button } from "@/components/ui/button";
@@ -5,12 +6,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
+
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -204,7 +208,6 @@ export default function PropertyPage() {
               onChange={(files) => {
                 setFileStates(files);
               }} />
-
           </div>
 
           <div className="space-y-2">
@@ -320,6 +323,7 @@ export default function PropertyPage() {
           <div className="space-y-2">
             <Label htmlFor="price">Price</Label>
             <Input id="price" type="number" name="price" placeholder="Enter price" />
+
           </div>
 
           <div className="space-y-2">
@@ -328,7 +332,6 @@ export default function PropertyPage() {
               value={rentType}
               onValueChange={(e) => setRentType(e)}>
               <SelectTrigger id="rentType">
-
                 <SelectValue placeholder="Select rent type" />
               </SelectTrigger>
               <SelectContent>
