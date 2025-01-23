@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 interface SignInProps {
     onLogin: (token: string) => void;
@@ -43,9 +44,11 @@ export function SignIn({ onLogin }: SignInProps) {
 
             const data = await response.json();
             Cookies.set("token", data.token, { expires: 1 });
+            toast.success("Login successful! 🎉");
             onLogin(data.token);
         } catch (err: any) {
             setError(err.message || "Something went wrong");
+            toast.error(err.message || "Failed to log in");
         } finally {
             setIsLoading(false);
         }

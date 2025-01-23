@@ -5,14 +5,12 @@ const prisma = new PrismaClient();
 
 export async function PUT(req: Request, { params }: { params: { propertyId: string } }) {
     try {
-        const body = await req.json();
-        const property = await prisma.property.findUnique({
-            where: {
-                id: parseInt(params.propertyId)
-            }
-        });
+        const propertyId = parseInt(params.propertyId);
+        if (isNaN(propertyId)) {
+            return NextResponse.json({ message: "Invalid property ID" }, { status: 400 });
+        }
 
-        if (!property) return new Error("Property not found");
+        const body = await req.json();
         const {
             name,
             description,
@@ -26,38 +24,47 @@ export async function PUT(req: Request, { params }: { params: { propertyId: stri
             amenities,
             bedroom,
             bathroom,
-            area
-        } = body
+            area,
+        } = body;
+
+        const property = await prisma.property.findUnique({
+            where: { id: propertyId },
+        });
+
+        if (!property) {
+            return NextResponse.json({ message: "Property not found" }, { status: 404 });
+        }
 
         await prisma.property.update({
-            where: {
-                id: property.id
-            },
+            where: { id: propertyId },
             data: {
-                name: body.name,
-                description: body.description,
-                province: body.province,
-                regency: body.regency,
-                district: body.district,
-                village: body.village,
-                address: body.address,
-                price: body.price,
-                typeOfRent: body.typeOfRent,
-                amenities: body.amenities,
-                bedroom: body.bedroom,
-                bathroom: body.bathroom,
-                area: body.area
-            }
+                name,
+                description,
+                province,
+                regency,
+                district,
+                village,
+                address,
+                price,
+                typeOfRent,
+                amenities,
+                bedroom,
+                bathroom,
+                area,
+            },
         });
 
         return NextResponse.json({
-            message: "Property update successfully"
+            message: "Property updated successfully",
         });
     } catch (error) {
-        console.error("Error creating booking:", error);
-        return NextResponse.json({
-            message: "Error creating booking",
-            error: (error as Error).message,
-        });
+        console.error("Error updating property:", error);
+        return NextResponse.json(
+            {
+                message: "Error updating property",
+                error: (error as Error).message,
+            },
+            { status: 500 }
+        );
     }
 }

@@ -55,7 +55,7 @@ model Property {
 
   price      Int
   typeOfRent TypeOfRent
-  amenities  Amenities[]
+  amenities  String[]
 
   bedroom  Int
   bathroom Int
@@ -110,12 +110,6 @@ enum TypeOfRent {
   DAY
   MONTH
   YEAR
-}
-
-enum Amenities {
-  FURNISHED
-  PET_ALLOWED
-  SHARED_ACCOMODATION
 }
 
 enum Payment {

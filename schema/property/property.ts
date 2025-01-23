@@ -13,9 +13,7 @@ export const propertySchema = z.object({
     typeOfRent: z.enum(["DAY", "MONTH", "YEAR"], {
         message: "Invalid type of rent! Please choose from 'DAY', 'MONTH', or 'YEAR'.",
     }),
-    amenities: z.enum(["FURNISHED", "PET_ALLOWED", "SHARED_ACCOMODATION"], {
-        message: "Invalid amenities! Please choose from 'FURNISHED', 'PET_ALLOWED', or 'SHARED_ACCOMODATION'.",
-    }),
+    amenities: z.array(z.string()),
     bedroom: z.number().int().min(1, "Bedroom must be at least 1"),
     bathroom: z.number().int().min(1, "Bathroom must be at least 1"),
     area: z.number().min(1, "Area is required!"),

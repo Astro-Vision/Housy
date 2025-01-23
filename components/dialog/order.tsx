@@ -23,23 +23,17 @@ export default function Order({ propertyId }: OrderProps) {
         }
     };
 
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userId, setUserId] = useState<number | null>(null);
-    console.log("sasdas",userId);
-    
+
     useEffect(() => {
         const token = Cookies.get('token');
         if (token) {
-            setIsAuthenticated(true);
-
             try {
                 const decoded: any = jwtDecode(token);
                 setUserId(decoded.id);
             } catch (error) {
                 console.error('Token decoding error:', error);
             }
-        } else {
-            setIsAuthenticated(false);
         }
     }, [Cookies.get('token')]);
 
@@ -66,12 +60,18 @@ export default function Order({ propertyId }: OrderProps) {
             }
         } catch (err: any) {
             console.log("Something went wrong");
-            
+
             setError(err.message || "Something went wrong");
         } finally {
             setIsLoading(false);
         }
     };
+
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-screen">
+            <p className="text-2xl">Loading...</p>
+        </div>;
+    }
 
     return (
         <DialogContent className="sm:max-w-[425px]">
